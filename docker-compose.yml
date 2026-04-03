@@ -1,0 +1,23 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: dockerfile
+    container_name: fintech-api
+    ports:
+      - "8080:2026"
+    environment:
+      PORT: 2026
+      JWT_SECRET: your-secret
+      MONGO_URI: mongodb://mongo:27017/fintech_dashboard
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:7
+    container_name: fintech-mongo
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
