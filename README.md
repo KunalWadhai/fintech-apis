@@ -13,7 +13,7 @@ Production-style Express + MongoDB backend for:
 - MongoDB + Mongoose
 - JWT for authentication
 
-## Folder Structure
+## Production Grade Backend Folder Structure
 
 ```
 src/
@@ -27,6 +27,12 @@ src/
     dashboard/         # summary analytics
   routes/              # route composition
   utils/               # ApiError, token, async wrappers
+  models/              # Models Invoke
+    user/
+    financialRecords/
+  schema/             # Models Specified Schema
+    user/
+    financialRecords/
 ```
 
 This structure is modular and service-oriented, so each module can be extracted into a separate microservice later with minimal coupling.
