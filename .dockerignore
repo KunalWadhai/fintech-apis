@@ -7,4 +7,6 @@ npm-debug.log
 coverage
 dist
 .DS_Store
+.cursor
+.agents
 README.md

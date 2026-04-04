@@ -1,18 +1,18 @@
-import { env } from "../config/env.js";
 import { verifyAccessToken } from "../utils/token.js";
 import { ApiError } from "../utils/apiError.js";
 
 export const requireAuth = (req, res, next) => {
-  const token = req.cookies?.[env.jwtCookieName];
+  const authHeader = req.headers.authorization || "";
+  const [scheme, token] = authHeader.split(" ");
 
-  if (!token) {
-    return next(new ApiError(401, "Authentication required"));
+  if (scheme !== "Bearer" || !token) {
+    return next(new ApiError(401, "Missing or invalid authorization token"));
   }
 
   try {
     req.user = verifyAccessToken(token);
     return next();
-  } catch {
-    return next(new ApiError(401, "Session is invalid or expired"));
+  } catch (error) {
+    return next(new ApiError(401, "Token is invalid or expired"));
   }
 };
