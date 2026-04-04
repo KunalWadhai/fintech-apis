@@ -1,11 +1,11 @@
 import { connectDatabase } from "./config/db.js";
-import { connectRedis, getRedisClient } from "./config/redis.js";
 import { env } from "./config/env.js";
 import { initAuthRouteRateLimit } from "./middlewares/rateLimit.js";
+import { initializeRedis, getRedisClient, disconnectRedis } from "./libs/redisClient.js";
 
 const startServer = async () => {
   await connectDatabase();
-  await connectRedis();
+  await initializeRedis();
   initAuthRouteRateLimit(getRedisClient());
 
   const { default: app } = await import("./app.js");
