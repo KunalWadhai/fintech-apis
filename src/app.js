@@ -5,6 +5,7 @@ import morgan from "morgan";
 import helmet from "helmet";
 import apiRoutes from "./routes/index.js";
 import { errorHandler, notFoundHandler } from "./middlewares/errorHandler.js";
+import { requestContext } from "./middlewares/requestContext.js";
 import { env } from "./config/env.js";
 
 const app = express();
@@ -32,6 +33,7 @@ app.use(morgan("dev"));
 app.use(express.json({ limit: "100kb" }));
 app.use(express.urlencoded({ extended: true, limit: "100kb" }));
 app.use(cookieParser());
+app.use(requestContext);
 
 app.use("/api/v1", apiRoutes);
 
