@@ -48,8 +48,8 @@ npm install
 2. Create `.env`:
 
 ```env
-PORT=2026
-MONGO_URI=mongodb://127.0.0.1:27017/fintech_dashboard
+PORT=YOUR_PORT
+MONGO_URI=YOUR_DB_URI
 JWT_SECRET=replace-with-strong-secret
 JWT_EXPIRES_IN=1d
 ```
