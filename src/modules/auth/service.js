@@ -13,14 +13,14 @@ const SAFE_USER_PROJECTION = {
   updatedAt: 1,
 };
 
-export const registerUser = async ({ name, email, password, role, status }) => {
+export const registerUser = async ({ name, email, password }) => {
   const existing = await User.findOne({ email: email.toLowerCase() });
   if (existing) {
     throw new ApiError(409, "Email already exists");
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
-  const created = await User.create({ name, email, passwordHash, role, status });
+  const created = await User.create({ name, email, passwordHash });
   return User.findById(created._id, SAFE_USER_PROJECTION);
 };
 
@@ -39,21 +39,24 @@ export const loginUser = async ({ email, password }) => {
     throw new ApiError(403, "User account is inactive");
   }
 
-  const token = signAccessToken({
+  const accessToken = signAccessToken({
     sub: user._id.toString(),
     email: user.email,
     role: user.role,
     status: user.status,
   });
 
-  return {
-    token,
-    user: {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      status: user.status,
-    },
-  };
+  const safe = await User.findById(user._id, SAFE_USER_PROJECTION).lean();
+  return { accessToken, user: safe };
+};
+
+export const getAuthProfile = async (userId) => {
+  const user = await User.findById(userId, SAFE_USER_PROJECTION).lean();
+  if (!user) {
+    throw new ApiError(401, "User not found");
+  }
+  if (user.status !== "active") {
+    throw new ApiError(403, "User account is inactive");
+  }
+  return user;
 };
