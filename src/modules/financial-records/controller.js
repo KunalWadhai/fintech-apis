@@ -1,41 +1,39 @@
 import { asyncHandler } from "../../utils/asyncHandler.js";
+import { sendSuccess } from "../../utils/apiResponse.js";
 import {
   createFinancialRecord,
   deleteFinancialRecord,
   listFinancialRecords,
   updateFinancialRecord,
 } from "./service.js";
-import {
-  validateRecordCreateBody,
-  validateRecordUpdateBody,
-} from "./validation.js";
 
 export const createRecord = asyncHandler(async (req, res) => {
-  validateRecordCreateBody(req.body);
   const record = await createFinancialRecord(req.body, req.user.sub);
-  res.status(201).json({ message: "Record created", data: record });
+  sendSuccess(res, 201, record, { message: "Financial record created successfully" });
 });
 
 export const getRecords = asyncHandler(async (req, res) => {
-  const data = await listFinancialRecords({
+  const result = await listFinancialRecords({
     type: req.query.type,
     category: req.query.category,
     startDate: req.query.startDate,
     endDate: req.query.endDate,
-    page: Number(req.query.page || 1),
-    limit: Number(req.query.limit || 20),
+    page: req.query.page,
+    limit: req.query.limit,
   });
 
-  res.status(200).json({ message: "Records fetched", data });
+  sendSuccess(res, 200, { items: result.items }, {
+    message: "Financial records retrieved successfully",
+    meta: { pagination: result.pagination },
+  });
 });
 
 export const updateRecord = asyncHandler(async (req, res) => {
-  validateRecordUpdateBody(req.body);
   const record = await updateFinancialRecord(req.params.recordId, req.body);
-  res.status(200).json({ message: "Record updated", data: record });
+  sendSuccess(res, 200, record, { message: "Financial record updated successfully" });
 });
 
 export const removeRecord = asyncHandler(async (req, res) => {
   await deleteFinancialRecord(req.params.recordId);
-  res.status(204).send();
+  sendSuccess(res, 200, null, { message: "Financial record deleted successfully" });
 });
