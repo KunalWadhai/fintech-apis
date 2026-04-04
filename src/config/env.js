@@ -21,10 +21,10 @@ export const env = {
   mongoUri: process.env.MONGO_URI,
   redisUrl: process.env.REDIS_URL,
   jwtSecret: process.env.JWT_SECRET,
-  jwtExpiresIn: process.env.JWT_EXPIRES_IN || "24h",
-  nodeEnv: process.env.NODE_ENV || "development",
+  jwtExpiresIn: process.env.JWT_EXPIRES_IN,
+  nodeEnv: process.env.NODE_ENV,
   trustedOrigins: parseTrustedOrigins(),
-  jwtCookieName: process.env.JWT_COOKIE_NAME || "access_token",
+  jwtCookieName: process.env.JWT_COOKIE_NAME,
   cookieSameSite: normalizeSameSite(process.env.COOKIE_SAMESITE),
   trustProxy: process.env.TRUST_PROXY === "true" || process.env.TRUST_PROXY === "1",
 };
