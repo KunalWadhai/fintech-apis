@@ -32,7 +32,7 @@ export const validateQuery = (schema) => (req, res, next) => {
     return next(new ApiError(400, "Validation failed", formatJoiDetails(error)));
   }
 
-  req.query = value;
+  req.validatedQuery = value;
   return next();
 };
 
@@ -43,6 +43,6 @@ export const validateParams = (schema) => (req, res, next) => {
     return next(new ApiError(400, "Validation failed", formatJoiDetails(error)));
   }
 
-  req.params = value;
+  req.validatedParams = value;
   return next();
 };
