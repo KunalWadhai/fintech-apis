@@ -13,13 +13,14 @@ export const createRecord = asyncHandler(async (req, res) => {
 });
 
 export const getRecords = asyncHandler(async (req, res) => {
+  const q = req.validatedQuery;
   const result = await listFinancialRecords({
-    type: req.query.type,
-    category: req.query.category,
-    startDate: req.query.startDate,
-    endDate: req.query.endDate,
-    page: req.query.page,
-    limit: req.query.limit,
+    type: q.type,
+    category: q.category,
+    startDate: q.startDate,
+    endDate: q.endDate,
+    page: q.page,
+    limit: q.limit,
   });
 
   sendSuccess(res, 200, { items: result.items }, {
@@ -29,11 +30,11 @@ export const getRecords = asyncHandler(async (req, res) => {
 });
 
 export const updateRecord = asyncHandler(async (req, res) => {
-  const record = await updateFinancialRecord(req.params.recordId, req.body);
+  const record = await updateFinancialRecord(req.validatedParams.recordId, req.body);
   sendSuccess(res, 200, record, { message: "Financial record updated successfully" });
 });
 
 export const removeRecord = asyncHandler(async (req, res) => {
-  await deleteFinancialRecord(req.params.recordId);
+  await deleteFinancialRecord(req.validatedParams.recordId);
   sendSuccess(res, 200, null, { message: "Financial record deleted successfully" });
 });

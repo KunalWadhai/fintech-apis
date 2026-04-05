@@ -3,11 +3,12 @@ import { sendSuccess } from "../../utils/apiResponse.js";
 import { listUsers, updateUserById } from "./service.js";
 
 export const getUsers = asyncHandler(async (req, res) => {
+  const q = req.validatedQuery;
   const result = await listUsers({
-    role: req.query.role,
-    status: req.query.status,
-    page: req.query.page,
-    limit: req.query.limit,
+    role: q.role,
+    status: q.status,
+    page: q.page,
+    limit: q.limit,
   });
 
   sendSuccess(res, 200, { items: result.items }, {
@@ -17,6 +18,6 @@ export const getUsers = asyncHandler(async (req, res) => {
 });
 
 export const updateUser = asyncHandler(async (req, res) => {
-  const user = await updateUserById(req.params.userId, req.body);
+  const user = await updateUserById(req.validatedParams.userId, req.body);
   sendSuccess(res, 200, user, { message: "User updated successfully" });
 });
